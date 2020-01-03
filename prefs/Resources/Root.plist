@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>LOHeader</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>xyz.skitty.lightsout</string>
+			<key>PostNotification</key>
+			<string>xyz.skitty.lightsout.prefschanged</string>
+			<key>key</key>
+			<string>enabled</string>
+			<key>label</key>
+			<string>Enabled</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Toggle system dark mode or Dune</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>xyz.skitty.lightsout</string>
+			<key>PostNotification</key>
+			<string>xyz.skitty.lightsout.prefschanged</string>
+			<key>key</key>
+			<string>useDarkMode</string>
+			<key>label</key>
+			<string>Dark Mode</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Toggle Night Shift</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>xyz.skitty.lightsout</string>
+			<key>PostNotification</key>
+			<string>xyz.skitty.lightsout.prefschanged</string>
+			<key>key</key>
+			<string>useNightShift</string>
+			<key>label</key>
+			<string>Night Shift</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Light Threshold</string>
+			<key>footerText</key>
+			<string>Light levels lower then this are considered low light. 0 = No light, 1000 = Full sunlight. Default is 50.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>50</real>
+			<key>defaults</key>
+			<string>xyz.skitty.lightsout</string>
+			<key>PostNotification</key>
+			<string>xyz.skitty.lightsout.prefschanged</string>
+			<key>key</key>
+			<string>luxThreshold</string>
+			<key>min</key>
+			<real>0</real>
+			<key>max</key>
+			<real>1000</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Sensor Interval</string>
+			<key>footerText</key>
+			<string>How long (seconds) between each sensor check</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>3</real>
+			<key>defaults</key>
+			<string>xyz.skitty.lightsout</string>
+			<key>PostNotification</key>
+			<string>xyz.skitty.lightsout.prefschanged</string>
+			<key>key</key>
+			<string>checkInterval</string>
+			<key>min</key>
+			<real>1</real>
+			<key>max</key>
+			<real>60</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>LightsOut</string>
+</dict>
+</plist>
