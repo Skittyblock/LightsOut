@@ -1,51 +1,24 @@
 // LightsOut, by Skitty
 // Toggle dark mode/night shift with the light sensor!
 
-#include <IOKit/hid/IOHIDEventSystem.h>
-#include <IOKit/hid/IOHIDEventSystemClient.h>
+#import <UIKit/UIKit.h>
+#import <IOKit/hid/IOHIDEventSystem.h>
+#import <IOKit/hid/IOHIDEventSystemClient.h>
+#import "UISUserInterfaceStyleMode.h"
+#import "CBBlueLightClient.h"
 
-extern "C" {
-	int IOHIDEventSystemClientSetMatching(IOHIDEventSystemClientRef client, CFDictionaryRef match);
-	CFArrayRef IOHIDEventSystemClientCopyServices(IOHIDEventSystemClientRef);
-	IOHIDEventSystemClientRef IOHIDEventSystemClientCreate(CFAllocatorRef allocator);
-	typedef struct __IOHIDServiceClient *IOHIDServiceClientRef;
-	int IOHIDServiceClientSetProperty(IOHIDServiceClientRef, CFStringRef, CFNumberRef);
-	CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
-}
+int IOHIDEventSystemClientSetMatching(IOHIDEventSystemClientRef client, CFDictionaryRef match);
+CFArrayRef IOHIDEventSystemClientCopyServices(IOHIDEventSystemClientRef);
+IOHIDEventSystemClientRef IOHIDEventSystemClientCreate(CFAllocatorRef allocator);
+typedef struct __IOHIDServiceClient *IOHIDServiceClientRef;
+int IOHIDServiceClientSetProperty(IOHIDServiceClientRef, CFStringRef, CFNumberRef);
+CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
+
+#define BUNDLE_ID @"xyz.skitty.lightsout"
 
 void init_iokit();
 void start_iokit();
 void stop_iokit();
-
-@interface UISUserInterfaceStyleMode : NSObject
-@property (nonatomic, assign) long long modeValue;
-@end
-
-typedef struct {
-	int hour;
-	int minute;
-} Time;
-
-typedef struct {
-	Time fromTime;
-	Time toTime;
-} Schedule;
-
-typedef struct {
-	BOOL active;
-	BOOL enabled;
-	BOOL sunSchedulePermitted;
-	int mode;
-	Schedule schedule;
-	unsigned long long disableFlags;
-	BOOL available;
-} Status;
-
-@interface CBBlueLightClient : NSObject
-- (BOOL)setActive:(BOOL)arg1;
-- (BOOL)setEnabled:(BOOL)arg1;
-- (BOOL)getBlueLightStatus:(Status *)arg1;
-@end
 
 static IOHIDEventSystemClientRef ioHIDClient;
 static CFRunLoopRef ioHIDRunLoopSchedule;
@@ -60,17 +33,17 @@ static int checkInterval;
 
 // Preference Updates
 static void refreshPrefs() {
-	CFArrayRef keyList = CFPreferencesCopyKeyList(CFSTR("xyz.skitty.lightsout"), kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+	CFArrayRef keyList = CFPreferencesCopyKeyList((CFStringRef)BUNDLE_ID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
 	if (keyList) {
-		settings = (NSMutableDictionary *)CFBridgingRelease(CFPreferencesCopyMultiple(keyList, CFSTR("xyz.skitty.lightsout"), kCFPreferencesCurrentUser, kCFPreferencesAnyHost));
+		settings = (NSMutableDictionary *)CFBridgingRelease(CFPreferencesCopyMultiple(keyList, (CFStringRef)BUNDLE_ID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost));
 		CFRelease(keyList);
 	} else {
 		settings = nil;
 	}
 	if (!settings) {
-		settings = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/xyz.skitty.lightsout.plist"];
+		settings = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/var/mobile/Library/Preferences/%@.plist", BUNDLE_ID]];
 	}
-	int oldEnabled = enabled;
+	BOOL oldEnabled = enabled;
 	int oldCheckInterval = checkInterval;
 
 	enabled = [([settings objectForKey:@"enabled"] ?: @(YES)) boolValue];
@@ -93,26 +66,25 @@ static void refreshPrefs() {
 }
 
 static void PreferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-  refreshPrefs();
+	refreshPrefs();
 }
 
 // Ambient Light Sensor
-void handle_event(void* target, void* refcon, IOHIDEventQueueRef queue, IOHIDEventRef event) {
+void handle_event(void* target, void *refcon, IOHIDEventQueueRef queue, IOHIDEventRef event) {
 	if (IOHIDEventGetType(event) == kIOHIDEventTypeAmbientLightSensor) {
 		int currentLux = IOHIDEventGetIntegerValue(event, (IOHIDEventField)kIOHIDEventFieldAmbientLightSensorLevel);
 
 		if (useDarkMode) {
 			BOOL darkEnabled;
-			if (@available(iOS 13, *)) {
+			if (@available(iOS 13, *)) { // Toggle system dark mode
 				darkEnabled = ([UITraitCollection currentTraitCollection].userInterfaceStyle == UIUserInterfaceStyleDark);
 				UISUserInterfaceStyleMode *styleMode = [[%c(UISUserInterfaceStyleMode) alloc] init];
 				if (currentLux >= lowluxThreshold && darkEnabled) {
 					styleMode.modeValue = 1;
-				} else if (currentLux < upluxThreshold && !darkEnabled)  {
+				} else if (currentLux < upluxThreshold && !darkEnabled) {
 					styleMode.modeValue = 2;
 				}
-			} else {
-				// If Dune is installed, use Dune preferences. This is a little buggy.
+			} else { // Toggle Dune (if installed)
 				NSMutableDictionary *dunePrefs = [NSMutableDictionary dictionaryWithDictionary:[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.skitty.dune.plist"]];
 				if (dunePrefs && [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/com.skitty.dune.list"])
 					darkEnabled = [[dunePrefs objectForKey:@"enabled"] boolValue];
@@ -120,7 +92,7 @@ void handle_event(void* target, void* refcon, IOHIDEventQueueRef queue, IOHIDEve
 				if (currentLux >= lowluxThreshold && darkEnabled) {
 					CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("xyz.skitty.dune.disabled"), nil, nil, true);
 					CFPreferencesSetAppValue((CFStringRef)@"enabled", (CFPropertyListRef)[NSNumber numberWithBool:NO], CFSTR("com.skitty.dune"));
-				} else if (currentLux < upluxThreshold && !darkEnabled)  {
+				} else if (currentLux < upluxThreshold && !darkEnabled) {
 					CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("xyz.skitty.dune.enabled"), nil, nil, true);
 					CFPreferencesSetAppValue((CFStringRef)@"enabled", (CFPropertyListRef)[NSNumber numberWithBool:YES], CFSTR("com.skitty.dune"));
 				}
@@ -133,11 +105,10 @@ void handle_event(void* target, void* refcon, IOHIDEventQueueRef queue, IOHIDEve
 			BOOL shiftEnabled = status.enabled;
 			if (currentLux >= lowluxThreshold && shiftEnabled) {
 				[nightShift setEnabled:NO];
-			} else if (currentLux < upluxThreshold && !shiftEnabled)  {
+			} else if (currentLux < upluxThreshold && !shiftEnabled) {
 				[nightShift setEnabled:YES];
 			}
 		}
-		//NSLog(@"[LightsOut] lux: %d, luxThreshold: %d, darkEnabled: %d, shiftEnabled: %d, useDarkMode: %d, useNightShift: %d", currentLux, luxThreshold, darkEnabled, shiftEnabled, useDarkMode, useNightShift);
 	}
 }
 
@@ -186,7 +157,7 @@ void stop_iokit() {
 
 // Tweak setup
 %ctor {
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR("xyz.skitty.lightsout.prefschanged"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, (CFStringRef)[BUNDLE_ID stringByAppendingString:@".prefschanged"], NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 	refreshPrefs();
 
 	%init;
