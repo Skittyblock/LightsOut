@@ -54,7 +54,8 @@ static NSMutableDictionary *settings;
 static BOOL enabled;
 static BOOL useDarkMode;
 static BOOL useNightShift;
-static int luxThreshold;
+static int upluxThreshold;
+static int lowluxThreshold;
 static int checkInterval;
 
 // Preference Updates
@@ -75,7 +76,8 @@ static void refreshPrefs() {
 	enabled = [([settings objectForKey:@"enabled"] ?: @(YES)) boolValue];
 	useDarkMode = [([settings objectForKey:@"useDarkMode"] ?: @(YES)) boolValue];
 	useNightShift = [([settings objectForKey:@"useNightShift"] ?: @(NO)) boolValue];
-	luxThreshold = [([settings objectForKey:@"luxThreshold"] ?: @50) intValue];
+	upluxThreshold = [([settings objectForKey:@"upluxThreshold"] ?: @50) intValue];
+	lowluxThreshold = [([settings objectForKey:@"lowluxThreshold"] ?: @40) intValue];
 	checkInterval = [([settings objectForKey:@"checkInterval"] ?: @3) intValue];
 
 	if (checkInterval != oldCheckInterval) {
@@ -104,9 +106,9 @@ void handle_event(void* target, void* refcon, IOHIDEventQueueRef queue, IOHIDEve
 			if (@available(iOS 13, *)) {
 				darkEnabled = ([UITraitCollection currentTraitCollection].userInterfaceStyle == UIUserInterfaceStyleDark);
 				UISUserInterfaceStyleMode *styleMode = [[%c(UISUserInterfaceStyleMode) alloc] init];
-				if (currentLux >= luxThreshold && darkEnabled) {
+				if (currentLux >= lowluxThreshold && darkEnabled) {
 					styleMode.modeValue = 1;
-				} else if (currentLux < luxThreshold && !darkEnabled)  {
+				} else if (currentLux < upluxThreshold && !darkEnabled)  {
 					styleMode.modeValue = 2;
 				}
 			} else {
@@ -114,11 +116,11 @@ void handle_event(void* target, void* refcon, IOHIDEventQueueRef queue, IOHIDEve
 				NSMutableDictionary *dunePrefs = [NSMutableDictionary dictionaryWithDictionary:[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.skitty.dune.plist"]];
 				if (dunePrefs && [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/com.skitty.dune.list"])
 					darkEnabled = [[dunePrefs objectForKey:@"enabled"] boolValue];
-				
-				if (currentLux >= luxThreshold && darkEnabled) {
+
+				if (currentLux >= lowluxThreshold && darkEnabled) {
 					CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("xyz.skitty.dune.disabled"), nil, nil, true);
 					CFPreferencesSetAppValue((CFStringRef)@"enabled", (CFPropertyListRef)[NSNumber numberWithBool:NO], CFSTR("com.skitty.dune"));
-				} else if (currentLux < luxThreshold && !darkEnabled)  {
+				} else if (currentLux < upluxThreshold && !darkEnabled)  {
 					CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("xyz.skitty.dune.enabled"), nil, nil, true);
 					CFPreferencesSetAppValue((CFStringRef)@"enabled", (CFPropertyListRef)[NSNumber numberWithBool:YES], CFSTR("com.skitty.dune"));
 				}
@@ -129,9 +131,9 @@ void handle_event(void* target, void* refcon, IOHIDEventQueueRef queue, IOHIDEve
 			CBBlueLightClient *nightShift = [[%c(CBBlueLightClient) alloc] init];
 			[nightShift getBlueLightStatus:&status];
 			BOOL shiftEnabled = status.enabled;
-			if (currentLux >= luxThreshold && shiftEnabled) {
+			if (currentLux >= lowluxThreshold && shiftEnabled) {
 				[nightShift setEnabled:NO];
-			} else if (currentLux < luxThreshold && !shiftEnabled)  {
+			} else if (currentLux < upluxThreshold && !shiftEnabled)  {
 				[nightShift setEnabled:YES];
 			}
 		}

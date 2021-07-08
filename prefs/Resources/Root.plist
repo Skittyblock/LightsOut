@@ -68,7 +68,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Light Threshold</string>
+			<string>Upper Light Threshold</string>
 			<key>footerText</key>
 			<string>Light levels lower than this are considered low light. 0 = No light, 1000 = Full sunlight. Default is 50.</string>
 		</dict>
@@ -82,7 +82,33 @@
 			<key>PostNotification</key>
 			<string>xyz.skitty.lightsout.prefschanged</string>
 			<key>key</key>
-			<string>luxThreshold</string>
+			<string>upluxThreshold</string>
+			<key>min</key>
+			<real>0</real>
+			<key>max</key>
+			<real>1000</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Lower Light Threshold</string>
+			<key>footerText</key>
+			<string>Light levels higher than this are considered high light. 0 = No light, 1000 = Full sunlight. Default is 40.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>40</real>
+			<key>defaults</key>
+			<string>xyz.skitty.lightsout</string>
+			<key>PostNotification</key>
+			<string>xyz.skitty.lightsout.prefschanged</string>
+			<key>key</key>
+			<string>lowluxThreshold</string>
 			<key>min</key>
 			<real>0</real>
 			<key>max</key>
