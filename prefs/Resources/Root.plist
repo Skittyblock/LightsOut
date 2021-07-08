@@ -2,14 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>name</key>
+	<string>LightsOut</string>
+	<key>subtitle</key>
+	<string>By Skitty</string>
+	<key>headerColor</key>
+	<string>#009e7d</string>
+	<key>textColor</key>
+	<string>#ffffff</string>
 	<key>items</key>
 	<array>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>headerCellClass</key>
-			<string>LOHeader</string>
-		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
@@ -54,7 +56,7 @@
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
-			<true/>
+			<false/>
 			<key>defaults</key>
 			<string>xyz.skitty.lightsout</string>
 			<key>PostNotification</key>
@@ -70,7 +72,7 @@
 			<key>label</key>
 			<string>Upper Light Threshold</string>
 			<key>footerText</key>
-			<string>Light levels lower than this are considered low light. 0 = No light, 1000 = Full sunlight. Default is 50.</string>
+			<string>When light rises above this level, dark mode will be turned off. 0 = No light, 1000 = Full sunlight. Default is 50.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -96,7 +98,7 @@
 			<key>label</key>
 			<string>Lower Light Threshold</string>
 			<key>footerText</key>
-			<string>Light levels higher than this are considered high light. 0 = No light, 1000 = Full sunlight. Default is 40.</string>
+			<string>When light falls below this level, dark mode will be turned on. Default is 40.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -122,7 +124,7 @@
 			<key>label</key>
 			<string>Sensor Interval</string>
 			<key>footerText</key>
-			<string>How long (seconds) between each sensor check</string>
+			<string>How long (seconds) between each sensor check. Default is 3.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -141,6 +143,24 @@
 			<real>60</real>
 			<key>showValue</key>
 			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Credits</string>
+			<key>footerText</key>
+			<string>© Skitty 2021</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>SPCreditCell</string>
+			<key>label</key>
+			<string>Skitty</string>
+			<key>twitter</key>
+			<string>Skittyblock</string>
+			<key>subtitle</key>
+			<string>Developer</string>
 		</dict>
 	</array>
 	<key>title</key>

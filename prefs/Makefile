@@ -1,12 +1,11 @@
-ARCHS = arm64 arm64e
-TARGET = iphone:clang::11.0
-
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = LightsOut
-LightsOut_FILES = $(wildcard *.m)
+
+LightsOut_FILES = $(wildcard *.m) $(wildcard SkittyPrefs/*.m)
 LightsOut_INSTALL_PATH = /Library/PreferenceBundles
 LightsOut_PRIVATE_FRAMEWORKS = Preferences
+LightsOut_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 
