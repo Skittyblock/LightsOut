@@ -6,6 +6,8 @@
 	<string>LightsOut</string>
 	<key>subtitle</key>
 	<string>By Skitty</string>
+	<key>tintColor</key>
+	<string>#009e7d</string>
 	<key>headerColor</key>
 	<string>#009e7d</string>
 	<key>textColor</key>

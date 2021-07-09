@@ -28,7 +28,7 @@ void init_iokit(int checkInterval) {
 	if (CFArrayGetCount(matchingsrvs) != 0) {
 		IOHIDServiceClientRef alssc = (IOHIDServiceClientRef)CFArrayGetValueAtIndex(matchingsrvs, 0);
 
-		int ri = checkInterval * 1000000; // about every 5 seconds
+		int ri = checkInterval * 1000000;
 		CFNumberRef interval = CFNumberCreate(CFAllocatorGetDefault(), kCFNumberIntType, &ri);
 		IOHIDServiceClientSetProperty(alssc, CFSTR("ReportInterval"), interval);
 	}

@@ -56,6 +56,7 @@ static void refreshPrefs() {
 	if (checkInterval != oldCheckInterval) {
 		stop_iokit();
 		init_iokit(checkInterval);
+		oldEnabled = NO;
 	}
 	if (enabled != oldEnabled) {
 		if (enabled) start_iokit(handleLuxChange);

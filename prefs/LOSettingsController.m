@@ -23,6 +23,9 @@ static int currentLux = 0;
 		[self.levelLabel.trailingAnchor constraintEqualToAnchor:self.headerView.trailingAnchor constant:-10]
 	]];
 
+	self.iconView.image = [UIImage imageWithContentsOfFile:[[self resourceBundle] pathForResource:@"logo" ofType:@"png"]];
+	self.iconView.transform = CGAffineTransformMakeScale(0.9, 0.9);
+
 	init_iokit(1);
 	start_iokit(handleLuxChange);
 	[self updateLux];
