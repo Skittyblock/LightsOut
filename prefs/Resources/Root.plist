@@ -10,6 +10,8 @@
 	<string>#009e7d</string>
 	<key>textColor</key>
 	<string>#ffffff</string>
+	<key>subtitleTextColor</key>
+	<string>#ffffffb2</string>
 	<key>items</key>
 	<array>
 		<dict>
@@ -84,7 +86,7 @@
 			<key>PostNotification</key>
 			<string>xyz.skitty.lightsout.prefschanged</string>
 			<key>key</key>
-			<string>upluxThreshold</string>
+			<string>upLuxThreshold</string>
 			<key>min</key>
 			<real>0</real>
 			<key>max</key>
@@ -110,7 +112,7 @@
 			<key>PostNotification</key>
 			<string>xyz.skitty.lightsout.prefschanged</string>
 			<key>key</key>
-			<string>lowluxThreshold</string>
+			<string>lowLuxThreshold</string>
 			<key>min</key>
 			<real>0</real>
 			<key>max</key>

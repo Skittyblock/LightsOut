@@ -2,10 +2,11 @@ include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = LightsOut
 
-LightsOut_FILES = $(wildcard *.m) $(wildcard SkittyPrefs/*.m)
+LightsOut_FILES = $(wildcard *.m) $(wildcard SkittyPrefs/*.m) ../iokit.c
 LightsOut_INSTALL_PATH = /Library/PreferenceBundles
 LightsOut_PRIVATE_FRAMEWORKS = Preferences
-LightsOut_CFLAGS = -fobjc-arc
+LightsOut_CFLAGS = -fobjc-arc -I../headers
+LightsOut_LDFLAGS = ../IOKit.tbd
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

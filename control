@@ -1,11 +1,11 @@
 Package: xyz.skitty.lightsout
 Name: LightsOut
-Depends: mobilesubstrate
-Version: 1.0
+Depends: mobilesubstrate, firmware (>= 11.0)
+Version: 1.0.1
 Architecture: iphoneos-arm
 Description: Toggle dark mode/night shift with the light sensor!
-Depiction: https://skitty.xyz/repo/depictions/?p=xyz.skitty.lightsout
-SileoDepiction: https://skitty.xyz/repo/depictions/?s=xyz.skitty.lightsout
+Depiction: https://skitty.xyz/repo/depictions/xyz.skitty.lightsout/
+SileoDepiction: https://skitty.xyz/repo/depictions/xyz.skitty.lightsout/sileo.json
 Icon: https://skitty.xyz/repo/icons/xyz.skitty.lightsout.png
 Maintainer: Skitty
 Author: Skitty
