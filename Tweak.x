@@ -2,6 +2,7 @@
 // Toggle dark mode/night shift with the light sensor!
 
 #import <UIKit/UIKit.h>
+#import <rootless.h>
 #import "iokit.h"
 #import "UISUserInterfaceStyleMode.h"
 #import "CBBlueLightClient.h"
@@ -35,7 +36,7 @@ static void refreshPrefs() {
 		settings = nil;
 	}
 	if (!settings) {
-		settings = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/var/mobile/Library/Preferences/%@.plist", BUNDLE_ID]];
+		settings = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:ROOT_PATH_NS(@"/var/mobile/Library/Preferences/%@.plist"), BUNDLE_ID]];
 	}
 	BOOL oldEnabled = enabled;
 	int oldCheckInterval = checkInterval;
@@ -87,8 +88,8 @@ static void handleLuxChange(void *target, void *refcon, IOHIDEventQueueRef queue
 				styleMode.modeValue = 2;
 			}
 		} else { // Toggle Dune (if installed)
-			NSMutableDictionary *dunePrefs = [NSMutableDictionary dictionaryWithDictionary:[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.skitty.dune.plist"]];
-			if (dunePrefs && [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/com.skitty.dune.list"])
+			NSMutableDictionary *dunePrefs = [NSMutableDictionary dictionaryWithDictionary:[NSDictionary dictionaryWithContentsOfFile:ROOT_PATH_NS(@"/var/mobile/Library/Preferences/com.skitty.dune.plist")]];
+			if (dunePrefs && [[NSFileManager defaultManager] fileExistsAtPath:ROOT_PATH_NS(@"/var/lib/dpkg/info/com.skitty.dune.list")])
 				darkEnabled = [[dunePrefs objectForKey:@"enabled"] boolValue];
 
 			if (currentLux >= upLuxThreshold && darkEnabled) {
