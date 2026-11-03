@@ -172,6 +172,32 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
+			<string>Consecutive Checks</string>
+			<key>footerText</key>
+			<string>How many sensor readings in a row must stay above the upper threshold or below the lower threshold before dark mode or night shift is switched. Default is 3.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>3</real>
+			<key>defaults</key>
+			<string>xyz.skitty.lightsout</string>
+			<key>PostNotification</key>
+			<string>xyz.skitty.lightsout.prefschanged</string>
+			<key>key</key>
+			<string>consecutiveChecks</string>
+			<key>min</key>
+			<real>1</real>
+			<key>max</key>
+			<real>10</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
 			<string>Credits</string>
 			<key>footerText</key>
 			<string>© Skitty 2021</string>
