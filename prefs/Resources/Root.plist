@@ -191,6 +191,10 @@
 			<real>1</real>
 			<key>max</key>
 			<real>10</real>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>9</integer>
 			<key>showValue</key>
 			<true/>
 		</dict>
